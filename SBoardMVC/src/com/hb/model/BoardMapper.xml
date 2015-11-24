@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hb.model.BoardMapper">
+	<select id="getBoardList" resultType="com.hb.vo.BoardVO"
+		parameterType="com.hb.vo.NaviVO">
+		select b.* from (
+		select rownum "NUM" , a.*
+		from (SELECT
+		NO, SUBJECT, WRITER, PASSWORD,
+		READHIT, REGDATE, GROUPNO, ORDERNO, DEPTH,
+		CONTENT, FILEPATH, FILENAME, FILESIZE
+		FROM
+		BOARDS order by no desc)a
+		) b
+		where num between #{beginRecode} AND #{endRecode}
+	</select>
+	<select id="getTotalRecode" resultType="int">
+		SELECT COUNT(*) FROM
+		BOARDS
+	</select>
+	<select id="getBoardDetail" resultType="com.hb.vo.BoardVO"
+		parameterType="com.hb.vo.BoardVO">
+		SELECT NO, SUBJECT, WRITER, PASSWORD,
+		READHIT, REGDATE,
+		GROUPNO, ORDERNO,
+		DEPTH, CONTENT, FILEPATH, FILENAME,
+		FILESIZE
+		FROM
+		BOARDS
+		WHERE
+		NO = #{no}
+	</select>
+	<delete id="deleteBoard" parameterType="com.hb.vo.BoardVO">
+		DELETE FROM BOARDS WHERE
+		NO = #{no}
+	</delete>
+	<insert id="insertBoard" parameterType="com.hb.vo.BoardVO">
+		insert into Boards(no,
+		groupno, subject, writer, password, content, readhit,
+		regdate)
+		values(myboard.nextval, myboard.currval, #{subject}, #{writer},
+		#{password}, #{content}, 0,
+		sysdate)
+	</insert>
+</mapper>
+
+
+
+
+
+
+
